@@ -8,8 +8,10 @@ using System.Data.SQLite;
 
 namespace network_switcher_control
 {
-    class SQLLiteSetup
+    class SQLiteSetup
     {
+        public static readonly int CurrentDatabaseVersion = 1;
+
         public static void RunDBSetup(string sqlFileName)
         {
             bool sqlFileCreated = false;
@@ -23,7 +25,7 @@ namespace network_switcher_control
                 sqlFileCreated = true;
             }
 
-            SQLiteConnection sqlConn = new SQLiteConnection(String.Format("Data Source={0};Version3", sqlFileName));
+            SQLiteConnection sqlConn = new SQLiteConnection(String.Format("Data Source={0};Version=3", sqlFileName));
             sqlConn.Open();
 
             if (sqlFileCreated)
@@ -40,10 +42,35 @@ namespace network_switcher_control
                 sql = "CREATE TABLE SecondaryNetworkConfig(ID INT, MainNetworkConfigID INT, IpAddr VARCHAR(15), NetMask VARCHAR(15))";
                 sqliteCommand = new SQLiteCommand(sql, sqlConn);
                 sqliteCommand.ExecuteNonQuery();
+
+                sql = "INSERT INTO DatabaseVersion (Version) VALUES (1)";
+                sqliteCommand = new SQLiteCommand(sql, sqlConn);
+                sqliteCommand.ExecuteNonQuery();
             }
 
+            // if any changes query the databaseversion and do the updates inserts or creates.
 
             sqlConn.Close();              
+        }
+
+        public static int DatabaseVersion(string sqlFileName)
+        {
+            if (!File.Exists(sqlFileName))
+            {
+                return 0;
+            }
+
+            string sql = String.Empty;
+            SQLiteCommand sqliteCommand;
+            SQLiteConnection sqlConn =  new SQLiteConnection(String.Format("Data Source={0};Version=3", sqlFileName));
+            sqlConn.Open();
+
+            sql = "SELECT TOP 1 version FROM DatabaseVersion";
+            sqliteCommand = new SQLiteCommand(sql, sqlConn);
+            SQLiteDataReader reader = sqliteCommand.ExecuteReader();
+
+            return (int)reader["version"];
+
         }
     }
 }
