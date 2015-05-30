@@ -32,6 +32,7 @@
             this.networkNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.networkContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addNewMainConfigButton = new System.Windows.Forms.Button();
             this.networkContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,15 +54,26 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // addNewMainConfigButton
+            // 
+            this.addNewMainConfigButton.Location = new System.Drawing.Point(12, 12);
+            this.addNewMainConfigButton.Name = "addNewMainConfigButton";
+            this.addNewMainConfigButton.Size = new System.Drawing.Size(175, 23);
+            this.addNewMainConfigButton.TabIndex = 1;
+            this.addNewMainConfigButton.Text = "Add New Main Configuration";
+            this.addNewMainConfigButton.UseVisualStyleBackColor = true;
+            this.addNewMainConfigButton.Click += new System.EventHandler(this.addNewMainConfigButton_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.ClientSize = new System.Drawing.Size(199, 262);
+            this.Controls.Add(this.addNewMainConfigButton);
             this.Name = "MainForm";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -77,6 +89,7 @@
         private System.Windows.Forms.NotifyIcon networkNotifyIcon;
         private System.Windows.Forms.ContextMenuStrip networkContextMenu;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.Button addNewMainConfigButton;
     }
 }
 

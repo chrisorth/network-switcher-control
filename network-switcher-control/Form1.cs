@@ -69,8 +69,10 @@ namespace network_switcher_control
 
         #endregion
 
-        
-
-        
+        private void addNewMainConfigButton_Click(object sender, EventArgs e)
+        {
+            ConfigurationForm cfgForm = new ConfigurationForm();
+            cfgForm.ShowDialog();
+        }
     }
 }

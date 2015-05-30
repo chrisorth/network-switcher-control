@@ -14,41 +14,47 @@ namespace network_switcher_control
 
         public static void RunDBSetup(string sqlFileName)
         {
-            bool sqlFileCreated = false;
             string sql = String.Empty;
             SQLiteCommand sqliteCommand;
 
             if (!File.Exists(sqlFileName))
             {
                 SQLiteConnection.CreateFile(sqlFileName);
-
-                sqlFileCreated = true;
             }
 
             SQLiteConnection sqlConn = new SQLiteConnection(String.Format("Data Source={0};Version=3", sqlFileName));
             sqlConn.Open();
 
-            if (sqlFileCreated)
+            int usersDBVersion = DatabaseVersion(sqlFileName);
+
+            if (File.Exists(sqlFileName))
             {
-                //setup the database after a fresh install
-                sql = "CREATE TABLE DatabaseVersion (version INT)";
-                sqliteCommand = new SQLiteCommand(sql, sqlConn);
-                sqliteCommand.ExecuteNonQuery();
+                if (usersDBVersion < CurrentDatabaseVersion)
+                {
+                    //setup the database after a fresh install
+                    sql = "CREATE TABLE DatabaseVersion (Version INT)";
+                    sqliteCommand = new SQLiteCommand(sql, sqlConn);
+                    sqliteCommand.ExecuteNonQuery();
 
-                sql = "CREATE TABLE MainNetworkConfig(ID INT, Name VARCHAR(50), ConnectionName VARCHAR(255), IpAddr VARCHAR(15), NetMask VARCHAR(15), DefaultGateway VARCHAR(15), Dns1 VARCHAR(15), Dns2 VARCHAR(15))";
-                sqliteCommand = new SQLiteCommand(sql, sqlConn);
-                sqliteCommand.ExecuteNonQuery();
+                    sql = "CREATE TABLE MainNetworkConfig(ID INT, ConnectionName VARCHAR(255), IpAddress VARCHAR(15), NetMask VARCHAR(15), DefaultGateway VARCHAR(15), PrimaryDNS VARCHAR(15), SecondaryDNS VARCHAR(15))";
+                    sqliteCommand = new SQLiteCommand(sql, sqlConn);
+                    sqliteCommand.ExecuteNonQuery();
 
-                sql = "CREATE TABLE SecondaryNetworkConfig(ID INT, MainNetworkConfigID INT, IpAddr VARCHAR(15), NetMask VARCHAR(15))";
-                sqliteCommand = new SQLiteCommand(sql, sqlConn);
-                sqliteCommand.ExecuteNonQuery();
+                    sql = "CREATE TABLE SecondaryNetworkConfig(ID INT, MainNetworkConfigID INT, IpAddress VARCHAR(15), NetMask VARCHAR(15))";
+                    sqliteCommand = new SQLiteCommand(sql, sqlConn);
+                    sqliteCommand.ExecuteNonQuery();
 
-                sql = "INSERT INTO DatabaseVersion (Version) VALUES (1)";
-                sqliteCommand = new SQLiteCommand(sql, sqlConn);
-                sqliteCommand.ExecuteNonQuery();
+                    sql = "INSERT INTO DatabaseVersion (Version) VALUES (1)";
+                    sqliteCommand = new SQLiteCommand(sql, sqlConn);
+                    sqliteCommand.ExecuteNonQuery();
+
+                    usersDBVersion++;
+                }
+
+                // if any changes query the databaseversion and do the updates inserts or creates.
             }
 
-            // if any changes query the databaseversion and do the updates inserts or creates.
+            
 
             sqlConn.Close();              
         }
@@ -60,16 +66,29 @@ namespace network_switcher_control
                 return 0;
             }
 
+            int rtrnVal = 0;
             string sql = String.Empty;
             SQLiteCommand sqliteCommand;
             SQLiteConnection sqlConn =  new SQLiteConnection(String.Format("Data Source={0};Version=3", sqlFileName));
             sqlConn.Open();
 
-            sql = "SELECT TOP 1 version FROM DatabaseVersion";
+            sql = "SELECT Version FROM DatabaseVersion LIMIT 1";
             sqliteCommand = new SQLiteCommand(sql, sqlConn);
-            SQLiteDataReader reader = sqliteCommand.ExecuteReader();
 
-            return (int)reader["version"];
+            SQLiteDataReader reader;
+            try
+            {
+                reader = sqliteCommand.ExecuteReader();
+
+                reader.Read();
+                rtrnVal = (int)reader["Version"];
+            }
+            catch (SQLiteException)
+            {
+            }
+            sqlConn.Close();
+
+            return rtrnVal;
 
         }
     }
