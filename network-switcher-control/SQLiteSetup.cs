@@ -15,48 +15,47 @@ namespace network_switcher_control
         public static void RunDBSetup(string sqlFileName)
         {
             string sql = String.Empty;
-            SQLiteCommand sqliteCommand;
 
-            if (!File.Exists(sqlFileName))
+            using(SQLiteConnection sqlconn = new SQLiteConnection(Program.SQLiteConnectionString))
+            using (SQLiteCommand sqliteCommand = new SQLiteCommand(sqlconn))
             {
-                SQLiteConnection.CreateFile(sqlFileName);
-            }
+                sqlconn.Open();
 
-            SQLiteConnection sqlConn = new SQLiteConnection(String.Format("Data Source={0};Version=3", sqlFileName));
-            sqlConn.Open();
-
-            int usersDBVersion = DatabaseVersion(sqlFileName);
-
-            if (File.Exists(sqlFileName))
-            {
-                if (usersDBVersion < CurrentDatabaseVersion)
-                {
-                    //setup the database after a fresh install
-                    sql = "CREATE TABLE DatabaseVersion (Version INT)";
-                    sqliteCommand = new SQLiteCommand(sql, sqlConn);
-                    sqliteCommand.ExecuteNonQuery();
-
-                    sql = "CREATE TABLE MainNetworkConfig(ID INT, ConnectionName VARCHAR(255), IpAddress VARCHAR(15), NetMask VARCHAR(15), DefaultGateway VARCHAR(15), PrimaryDNS VARCHAR(15), SecondaryDNS VARCHAR(15))";
-                    sqliteCommand = new SQLiteCommand(sql, sqlConn);
-                    sqliteCommand.ExecuteNonQuery();
-
-                    sql = "CREATE TABLE SecondaryNetworkConfig(ID INT, MainNetworkConfigID INT, IpAddress VARCHAR(15), NetMask VARCHAR(15))";
-                    sqliteCommand = new SQLiteCommand(sql, sqlConn);
-                    sqliteCommand.ExecuteNonQuery();
-
-                    sql = "INSERT INTO DatabaseVersion (Version) VALUES (1)";
-                    sqliteCommand = new SQLiteCommand(sql, sqlConn);
-                    sqliteCommand.ExecuteNonQuery();
-
-                    usersDBVersion++;
+                if (!File.Exists(sqlFileName))
+                {                    
+                    SQLiteConnection.CreateFile(sqlFileName);
                 }
+                
 
-                // if any changes query the databaseversion and do the updates inserts or creates.
+                int usersDBVersion = DatabaseVersion(sqlFileName);
+
+                if (File.Exists(sqlFileName))
+                {
+                    if (usersDBVersion < CurrentDatabaseVersion)
+                    {
+                        //setup the database after a fresh install
+                        sql = "CREATE TABLE DatabaseVersion (Version INT)";
+                        sqliteCommand.CommandText = sql;
+                        sqliteCommand.ExecuteNonQuery();
+
+                        sql = "CREATE TABLE MainNetworkConfig(ID INT, ConnectionName VARCHAR(255), IpAddress VARCHAR(15), NetMask VARCHAR(15), DefaultGateway VARCHAR(15), PrimaryDNS VARCHAR(15), SecondaryDNS VARCHAR(15))";
+                        sqliteCommand.CommandText = sql;
+                        sqliteCommand.ExecuteNonQuery();
+
+                        sql = "CREATE TABLE SecondaryNetworkConfig(ID INT, MainNetworkConfigID INT, IpAddress VARCHAR(15), NetMask VARCHAR(15))";
+                        sqliteCommand.CommandText = sql;
+                        sqliteCommand.ExecuteNonQuery();
+
+                        sql = "INSERT INTO DatabaseVersion (Version) VALUES (1)";
+                        sqliteCommand.CommandText = sql;
+                        sqliteCommand.ExecuteNonQuery();
+
+                        usersDBVersion++;
+                    }
+
+                    // if any changes query the databaseversion and do the updates inserts or creates.
+                }
             }
-
-            
-
-            sqlConn.Close();              
         }
 
         public static int DatabaseVersion(string sqlFileName)
@@ -67,27 +66,26 @@ namespace network_switcher_control
             }
 
             int rtrnVal = 0;
-            string sql = String.Empty;
-            SQLiteCommand sqliteCommand;
-            SQLiteConnection sqlConn =  new SQLiteConnection(String.Format("Data Source={0};Version=3", sqlFileName));
-            sqlConn.Open();
+            string sql = "SELECT Version FROM DatabaseVersion LIMIT 1";
 
-            sql = "SELECT Version FROM DatabaseVersion LIMIT 1";
-            sqliteCommand = new SQLiteCommand(sql, sqlConn);
-
-            SQLiteDataReader reader;
-            try
+            using (SQLiteConnection sqlConn = new SQLiteConnection(Program.SQLiteConnectionString))
+            using (SQLiteCommand sqliteCommand = new SQLiteCommand(sql, sqlConn))
             {
-                reader = sqliteCommand.ExecuteReader();
+                sqlConn.Open();
 
-                reader.Read();
-                rtrnVal = (int)reader["Version"];
+                try
+                {
+                    using (SQLiteDataReader reader = sqliteCommand.ExecuteReader())
+                    {
+                        reader.Read();
+                        rtrnVal = (int)reader["Version"];                        
+                    }
+                }
+                catch (SQLiteException)
+                {
+                }
+                
             }
-            catch (SQLiteException)
-            {
-            }
-            sqlConn.Close();
-
             return rtrnVal;
 
         }

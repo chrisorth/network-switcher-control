@@ -12,8 +12,7 @@ namespace network_switcher_control
     {
         public static readonly string SQLITE_DATABASE_NAME = "dbNetworkConfig.sqlite";
 
-        public static SQLiteConnection SQLiteConn { get; private set; }
-        public static SQLiteTools SQLiteTools { get; private set; }
+        public static string SQLiteConnectionString { get; private set; }
         
         /// <summary>
         /// The main entry point for the application.
@@ -21,23 +20,18 @@ namespace network_switcher_control
         [STAThread]
         static void Main()
         {
+            SQLiteConnectionString = String.Format("Data Source={0};Version=3", SQLITE_DATABASE_NAME);
             
-            SQLiteConn = new SQLiteConnection(String.Format("Data Source={0};Version=3", SQLITE_DATABASE_NAME));
-            SQLiteConn.Open();
-
             if (SQLiteSetup.DatabaseVersion(SQLITE_DATABASE_NAME) != SQLiteSetup.CurrentDatabaseVersion)
             {
                 SQLiteSetup.RunDBSetup(SQLITE_DATABASE_NAME);
-            }
+            }      
 
-            SQLiteTools = new SQLiteTools(SQLiteConn);
-    
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
 
 
-            SQLiteConn.Close();
         }
     }
 }

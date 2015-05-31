@@ -45,7 +45,7 @@ namespace network_switcher_control
 
         private void configurationForm_Load(object sender, EventArgs e)
         {
-            SQLiteTools sqliteTools = new SQLiteTools(Program.SQLiteConn);
+            SQLiteTools sqliteTools = new SQLiteTools();
             MainConfigItem = new MainNetworkConfigItem();
 
             if (IsNewConfig)
@@ -80,24 +80,27 @@ namespace network_switcher_control
             else
             {
                 string sql = String.Format("SELECT * FROM MainNetworkConfig WHERE ID = {0} LIMIT 1", ConfigID);
-                SQLiteCommand sqliteCmd = new SQLiteCommand(sql, Program.SQLiteConn);
-                SQLiteDataReader reader = sqliteCmd.ExecuteReader();
+                using (SQLiteConnection sqlconn = new SQLiteConnection(Program.SQLiteConnectionString))
+                using (SQLiteCommand sqliteCmd = new SQLiteCommand(sql, sqlconn))
 
-                try
-                {
-                    reader.Read();
+                    try
+                    {
+                        using (SQLiteDataReader reader = sqliteCmd.ExecuteReader())
+                        {
+                            reader.Read();
 
-                    MainConfigItem.setID((int)reader["ID"]);
-                    MainConfigItem.setConnectionName((string)reader["ConnectionName"]);
-                    MainConfigItem.setIPAddress((string)reader["IpAddr"]);
-                    MainConfigItem.setNetMask((string)reader["NetMask"]);
-                    MainConfigItem.setDefaultGateway((string)reader["DefaultGateWay"]);
-                    MainConfigItem.setPrimaryDNS((string)reader["PrimaryDNS"]);
-                    MainConfigItem.setSecondaryDNS((string)reader["SecondaryDNS"]);
-                }
-                catch (InvalidOperationException)
-                {                    
-                }
+                            MainConfigItem.setID((int)reader["ID"]);
+                            MainConfigItem.setConnectionName((string)reader["ConnectionName"]);
+                            MainConfigItem.setIPAddress((string)reader["IpAddr"]);
+                            MainConfigItem.setNetMask((string)reader["NetMask"]);
+                            MainConfigItem.setDefaultGateway((string)reader["DefaultGateWay"]);
+                            MainConfigItem.setPrimaryDNS((string)reader["PrimaryDNS"]);
+                            MainConfigItem.setSecondaryDNS((string)reader["SecondaryDNS"]);
+                        }
+                    }
+                    catch (InvalidOperationException)
+                    {
+                    }
 
                 configurationNameTextBox.Text = MainConfigItem.ConnectionName;
 
@@ -144,42 +147,71 @@ namespace network_switcher_control
             string primaryDns = String.Format("{0}.{1}.{2}.{3}", primaryDns1TextBox.Text, primaryDns2TextBox.Text, primaryDns3TextBox.Text, primaryDns4TextBox.Text);
             string secondaryDns = String.Format("{0}.{1}.{2}.{3}", secondaryDns1TextBox.Text, secondaryDns2TextBox.Text, secondaryDns3TextBox.Text, secondaryDns4TextBox.Text);
 
-            if (IsNewConfig)
+            using (SQLiteConnection sqlconn = new SQLiteConnection(Program.SQLiteConnectionString))
+            using (SQLiteCommand sqlcmd = new SQLiteCommand(sql, sqlconn))
             {
-                sql = "INSERT INTO MainNetworkConfig (ID, ConnectionName, IpAddress, NetMask, DefaultGateway, PrimaryDNS, SecondaryDNS) VALUES (@id, @conname, @ipaddr, @netmask, @defgateway, @primarydns, @secondarydns)";
-
-                SQLiteCommand sqlcmd = new SQLiteCommand(sql, Program.SQLiteConn);
-                sqlcmd.Parameters.Add(new SQLiteParameter("@id", DbType.Int32));
-                sqlcmd.Parameters.Add(new SQLiteParameter("@conname", DbType.String));
-                sqlcmd.Parameters.Add(new SQLiteParameter("@ipaddr", DbType.String));
-                sqlcmd.Parameters.Add(new SQLiteParameter("@netmask", DbType.String));
-                sqlcmd.Parameters.Add(new SQLiteParameter("@defgateway", DbType.String));
-                sqlcmd.Parameters.Add(new SQLiteParameter("@primarydns", DbType.String));
-                sqlcmd.Parameters.Add(new SQLiteParameter("@csecondarydns", DbType.String));
-                
-                
-                sqlcmd.Parameters.AddWithValue("@id", MainConfigItem.ID);
-                sqlcmd.Parameters.AddWithValue("@conname", MainConfigItem.ConnectionName);
-                sqlcmd.Parameters.AddWithValue("@ipaddr", MainConfigItem.IPAddress);
-                sqlcmd.Parameters.AddWithValue("@netmask", MainConfigItem.NetMask);
-                sqlcmd.Parameters.AddWithValue("@defgateway", MainConfigItem.DefaultGateway);
-                sqlcmd.Parameters.AddWithValue("@primarydns", MainConfigItem.PrimaryDNS);
-                sqlcmd.Parameters.AddWithValue("@secondarydns", MainConfigItem.SecondaryDNS);
-                
- 
-                int count = sqlcmd.ExecuteNonQuery();
-
-                if (count > 0)
+                if (IsNewConfig)
                 {
-                    MessageBox.Show("Successful");
+                    sql = "INSERT INTO MainNetworkConfig (ID, ConnectionName, IpAddress, NetMask, DefaultGateway, PrimaryDNS, SecondaryDNS) VALUES (@id, @conname, @ipaddr, @netmask, @defgateway, @primarydns, @secondarydns)";
+
+                    sqlconn.Open();
+                    sqlcmd.Parameters.Add(new SQLiteParameter("@id", DbType.Int32));
+                    sqlcmd.Parameters.Add(new SQLiteParameter("@conname", DbType.String));
+                    sqlcmd.Parameters.Add(new SQLiteParameter("@ipaddr", DbType.String));
+                    sqlcmd.Parameters.Add(new SQLiteParameter("@netmask", DbType.String));
+                    sqlcmd.Parameters.Add(new SQLiteParameter("@defgateway", DbType.String));
+                    sqlcmd.Parameters.Add(new SQLiteParameter("@primarydns", DbType.String));
+                    sqlcmd.Parameters.Add(new SQLiteParameter("@secondarydns", DbType.String));
+
+                    sqlcmd.Parameters["@id"].Value = new SQLiteTools().GetNextMainNetwokID();
+                    sqlcmd.Parameters["@conname"].Value = configurationNameTextBox.Text.Trim();
+                    sqlcmd.Parameters["@ipaddr"].Value = ipAddr;
+                    sqlcmd.Parameters["@netmask"].Value = netMask;
+                    sqlcmd.Parameters["@defgateway"].Value = defaultGateway;
+                    sqlcmd.Parameters["@primarydns"].Value = primaryDns;
+                    sqlcmd.Parameters["@secondarydns"].Value = secondaryDns;
+
+                    try
+                    {
+                        int count = sqlcmd.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
+
+                }
+                else
+                {
+                    sql = "UPDATE MainNetworkConfig SET ConnectionName=@ConnectionName, IpAddress=@IpAddress, NetMask=@NetMask, DefaultGateway=@DefaultGateway, PrimaryDNS=@PrimaryDNS, SecondaryDNS=@SecondaryDNS WHERE ID=@ID";
+
+                    sqlconn.Open();
+                    sqlcmd.Parameters.Add(new SQLiteParameter("@ID", DbType.Int32));
+                    sqlcmd.Parameters.Add(new SQLiteParameter("@ConnectionName", DbType.String));
+                    sqlcmd.Parameters.Add(new SQLiteParameter("@IpAddress", DbType.String));
+                    sqlcmd.Parameters.Add(new SQLiteParameter("@NetMask", DbType.String));
+                    sqlcmd.Parameters.Add(new SQLiteParameter("@DefaultGateway", DbType.String));
+                    sqlcmd.Parameters.Add(new SQLiteParameter("@PrimaryDNS", DbType.String));
+                    sqlcmd.Parameters.Add(new SQLiteParameter("@SecondaryDNS", DbType.String));
+
+                    sqlcmd.Parameters["@ID"].Value = MainConfigItem.ID;
+                    sqlcmd.Parameters["@ConnectionName"].Value = configurationNameTextBox.Text.Trim();
+                    sqlcmd.Parameters["@IpAddress"].Value = ipAddr;
+                    sqlcmd.Parameters["@NetMask"].Value = netMask;
+                    sqlcmd.Parameters["@DefaultGateway"].Value = defaultGateway;
+                    sqlcmd.Parameters["@PrimaryDNS"].Value = primaryDns;
+                    sqlcmd.Parameters["@SecondaryDNS"].Value = secondaryDns;
+
+                    try
+                    {
+                        int count = sqlcmd.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
                 }
             }
-            else
-            {
-                sql = String.Format("UPDATE MainNetworkConfig SET ConnectionName = '{0}', IpAddress = '{1}', NetMask = '{2}', DefaultGateway = '{3}', PrimaryDNS = '{4}', SecondaryDNS = '{5}'",
-                        MainConfigItem.ConnectionName, MainConfigItem.IPAddress, MainConfigItem.NetMask, MainConfigItem.DefaultGateway, MainConfigItem.PrimaryDNS, MainConfigItem.SecondaryDNS);
-            }
-
         }
     }
 }
