@@ -33,6 +33,7 @@
             this.networkContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewMainConfigButton = new System.Windows.Forms.Button();
+            this.editMainConfigurationButton = new System.Windows.Forms.Button();
             this.networkContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,11 +69,22 @@
             this.addNewMainConfigButton.UseVisualStyleBackColor = true;
             this.addNewMainConfigButton.Click += new System.EventHandler(this.addNewMainConfigButton_Click);
             // 
+            // editMainConfigurationButton
+            // 
+            this.editMainConfigurationButton.Location = new System.Drawing.Point(12, 41);
+            this.editMainConfigurationButton.Name = "editMainConfigurationButton";
+            this.editMainConfigurationButton.Size = new System.Drawing.Size(175, 23);
+            this.editMainConfigurationButton.TabIndex = 2;
+            this.editMainConfigurationButton.Text = "Edit a Main Configuration";
+            this.editMainConfigurationButton.UseVisualStyleBackColor = true;
+            this.editMainConfigurationButton.Click += new System.EventHandler(this.editMainConfigurationButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(199, 262);
+            this.Controls.Add(this.editMainConfigurationButton);
             this.Controls.Add(this.addNewMainConfigButton);
             this.Name = "MainForm";
             this.Text = "Form1";
@@ -90,6 +102,7 @@
         private System.Windows.Forms.ContextMenuStrip networkContextMenu;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.Button addNewMainConfigButton;
+        private System.Windows.Forms.Button editMainConfigurationButton;
     }
 }
 

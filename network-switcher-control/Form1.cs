@@ -74,5 +74,11 @@ namespace network_switcher_control
             ConfigurationForm cfgForm = new ConfigurationForm();
             cfgForm.ShowDialog();
         }
+
+        private void editMainConfigurationButton_Click(object sender, EventArgs e)
+        {
+            ConfigurationSelectorForm csf = new ConfigurationSelectorForm(ConfigurationSelectorForm.ConfigSelectorMode.SelectPrimary);
+            csf.ShowDialog();
+        }
     }
 }
