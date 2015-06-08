@@ -106,6 +106,7 @@
             this.ipAddr1TextBox.TabIndex = 3;
             this.ipAddr1TextBox.Text = "000";
             this.ipAddr1TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ipAddr1TextBox.Leave += new System.EventHandler(this.ipAddr1TextBox_Leave);
             // 
             // ipAddr2TextBox
             // 
@@ -115,6 +116,7 @@
             this.ipAddr2TextBox.TabIndex = 4;
             this.ipAddr2TextBox.Text = "000";
             this.ipAddr2TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ipAddr2TextBox.Leave += new System.EventHandler(this.ipAddr2TextBox_Leave);
             // 
             // ipAddr3TextBox
             // 
@@ -124,6 +126,7 @@
             this.ipAddr3TextBox.TabIndex = 5;
             this.ipAddr3TextBox.Text = "000";
             this.ipAddr3TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ipAddr3TextBox.Leave += new System.EventHandler(this.ipAddr3TextBox_Leave);
             // 
             // ipAddr4TextBox
             // 
@@ -133,6 +136,7 @@
             this.ipAddr4TextBox.TabIndex = 6;
             this.ipAddr4TextBox.Text = "000";
             this.ipAddr4TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ipAddr4TextBox.Leave += new System.EventHandler(this.ipAddr4TextBox_Leave);
             // 
             // label3
             // 
@@ -196,6 +200,7 @@
             this.netmask4TextBox.TabIndex = 14;
             this.netmask4TextBox.Text = "000";
             this.netmask4TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.netmask4TextBox.Leave += new System.EventHandler(this.netmask4TextBox_Leave);
             // 
             // netmask3TextBox
             // 
@@ -205,6 +210,7 @@
             this.netmask3TextBox.TabIndex = 13;
             this.netmask3TextBox.Text = "000";
             this.netmask3TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.netmask3TextBox.Leave += new System.EventHandler(this.netmask3TextBox_Leave);
             // 
             // netmask2TextBox
             // 
@@ -214,6 +220,7 @@
             this.netmask2TextBox.TabIndex = 12;
             this.netmask2TextBox.Text = "000";
             this.netmask2TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.netmask2TextBox.Leave += new System.EventHandler(this.netmask2TextBox_Leave);
             // 
             // netmask1TextBox
             // 
@@ -223,6 +230,7 @@
             this.netmask1TextBox.TabIndex = 11;
             this.netmask1TextBox.Text = "000";
             this.netmask1TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.netmask1TextBox.Leave += new System.EventHandler(this.netmask1TextBox_Leave);
             // 
             // label9
             // 
@@ -268,6 +276,7 @@
             this.defaultGateway4TextBox.TabIndex = 22;
             this.defaultGateway4TextBox.Text = "000";
             this.defaultGateway4TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.defaultGateway4TextBox.Leave += new System.EventHandler(this.defaultGateway4TextBox_Leave);
             // 
             // defaultGateway3TextBox
             // 
@@ -277,6 +286,7 @@
             this.defaultGateway3TextBox.TabIndex = 21;
             this.defaultGateway3TextBox.Text = "000";
             this.defaultGateway3TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.defaultGateway3TextBox.Leave += new System.EventHandler(this.defaultGateway3TextBox_Leave);
             // 
             // defaultGateway2TextBox
             // 
@@ -286,6 +296,7 @@
             this.defaultGateway2TextBox.TabIndex = 20;
             this.defaultGateway2TextBox.Text = "000";
             this.defaultGateway2TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.defaultGateway2TextBox.Leave += new System.EventHandler(this.defaultGateway2TextBox_Leave);
             // 
             // defaultGateway1TextBox
             // 
@@ -295,6 +306,7 @@
             this.defaultGateway1TextBox.TabIndex = 19;
             this.defaultGateway1TextBox.Text = "000";
             this.defaultGateway1TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.defaultGateway1TextBox.Leave += new System.EventHandler(this.defaultGateway1TextBox_Text);
             // 
             // label13
             // 
@@ -340,6 +352,7 @@
             this.primaryDns4TextBox.TabIndex = 30;
             this.primaryDns4TextBox.Text = "000";
             this.primaryDns4TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.primaryDns4TextBox.Leave += new System.EventHandler(this.primaryDns4TextBox_Leave);
             // 
             // primaryDns3TextBox
             // 
@@ -349,6 +362,7 @@
             this.primaryDns3TextBox.TabIndex = 29;
             this.primaryDns3TextBox.Text = "000";
             this.primaryDns3TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.primaryDns3TextBox.Leave += new System.EventHandler(this.primaryDns3TextBox_Leave);
             // 
             // primaryDns2TextBox
             // 
@@ -358,6 +372,7 @@
             this.primaryDns2TextBox.TabIndex = 28;
             this.primaryDns2TextBox.Text = "000";
             this.primaryDns2TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.primaryDns2TextBox.Leave += new System.EventHandler(this.primaryDns2TextBox_Leave);
             // 
             // primaryDns1TextBox
             // 
@@ -367,6 +382,7 @@
             this.primaryDns1TextBox.TabIndex = 27;
             this.primaryDns1TextBox.Text = "000";
             this.primaryDns1TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.primaryDns1TextBox.Leave += new System.EventHandler(this.primaryDns1TextBox_Leave);
             // 
             // label17
             // 
@@ -412,6 +428,7 @@
             this.secondaryDns4TextBox.TabIndex = 38;
             this.secondaryDns4TextBox.Text = "000";
             this.secondaryDns4TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.secondaryDns4TextBox.Leave += new System.EventHandler(this.secondaryDns4TextBox_Leave);
             // 
             // secondaryDns3TextBox
             // 
@@ -421,6 +438,7 @@
             this.secondaryDns3TextBox.TabIndex = 37;
             this.secondaryDns3TextBox.Text = "000";
             this.secondaryDns3TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.secondaryDns3TextBox.Leave += new System.EventHandler(this.secondaryDns3TextBox_Leave);
             // 
             // secondaryDns2TextBox
             // 
@@ -430,6 +448,7 @@
             this.secondaryDns2TextBox.TabIndex = 36;
             this.secondaryDns2TextBox.Text = "000";
             this.secondaryDns2TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.secondaryDns2TextBox.Leave += new System.EventHandler(this.secondaryDns2TextBox_Leave);
             // 
             // secondaryDns1TextBox
             // 
@@ -439,6 +458,7 @@
             this.secondaryDns1TextBox.TabIndex = 35;
             this.secondaryDns1TextBox.Text = "000";
             this.secondaryDns1TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.secondaryDns1TextBox.Leave += new System.EventHandler(this.secondaryDns1TextBox_Leave);
             // 
             // label21
             // 

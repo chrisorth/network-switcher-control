@@ -38,5 +38,31 @@ namespace network_switcher_control
             }
             return rtrnVal;
         }
+
+        public int GetNextSecondaryNetworkID()
+        {
+            int rtrnVal;
+            string sql = "SELECT ID FROM SecondaryNetworkConfig ORDER BY ID DESC LIMIT 1";
+
+            using(SQLiteConnection sqlconn = new SQLiteConnection(Program.SQLiteConnectionString))
+            using (SQLiteCommand sqlcmd = new SQLiteCommand(sql, sqlconn))
+            {
+                sqlconn.Open();
+                try
+                {
+                    using (SQLiteDataReader reader = sqlcmd.ExecuteReader())
+                    {
+                        reader.Read();
+                        rtrnVal = (int)reader["ID"] + 1;
+                    }
+                }
+                catch (InvalidOperationException)
+                {
+                    rtrnVal = 1;
+                }
+            }
+
+            return rtrnVal;
+        }
     }
 }

@@ -14,12 +14,14 @@ namespace network_switcher_control
     public partial class ConfigurationSelectorForm : Form
     {
         private ConfigSelectorMode SelectorMode { get; set; }
+        public int MainConfigurationSelectedID { get; private set; }
 
         public ConfigurationSelectorForm(ConfigSelectorMode csm)
         {
             InitializeComponent();
 
             SelectorMode = csm;
+            MainConfigurationSelectedID = -1;
         }
 
 
@@ -98,8 +100,16 @@ namespace network_switcher_control
             DataGridView dgv = (DataGridView)sender;
             int configurationIDSelected = (int)dgv[0, e.RowIndex].Value;
 
-            ConfigurationForm cf = new ConfigurationForm(false, configurationIDSelected);
-            cf.ShowDialog();
+            if (this.SelectorMode == ConfigSelectorMode.EditPrimary)
+            {
+                ConfigurationForm cf = new ConfigurationForm(false, configurationIDSelected);
+                cf.ShowDialog();
+            }
+            else if (this.SelectorMode == ConfigSelectorMode.SelectPrimary)
+            {
+                MainConfigurationSelectedID = configurationIDSelected;
+                this.Close();
+            }
         }
     }
 }

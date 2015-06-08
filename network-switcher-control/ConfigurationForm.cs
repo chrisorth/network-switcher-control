@@ -228,5 +228,127 @@ namespace network_switcher_control
                 }
             }
         }
+
+        private void ValidateAddressPart(TextBox textBox)
+        {
+            int tmpint = Int32.Parse(textBox.Text);
+
+            if (tmpint < 0)
+            {
+                MessageBox.Show("Address cannot be less than 0.");
+                tmpint = 0;
+            }
+            else if (tmpint > 255)
+            {
+                MessageBox.Show("Address connot be greater than 255.");
+                tmpint = 255;
+            }
+
+            textBox.Text = tmpint.ToString();
+        }
+
+        private void ipAddr1TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void ipAddr2TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void ipAddr3TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void ipAddr4TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void netmask1TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void netmask2TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void netmask3TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void netmask4TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void defaultGateway1TextBox_Text(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void defaultGateway2TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void defaultGateway3TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void defaultGateway4TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void primaryDns1TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void primaryDns2TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void primaryDns3TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void primaryDns4TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void secondaryDns1TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void secondaryDns2TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void secondaryDns3TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void secondaryDns4TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+        
+        
+
+        
     }
 }

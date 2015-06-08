@@ -77,8 +77,17 @@ namespace network_switcher_control
 
         private void editMainConfigurationButton_Click(object sender, EventArgs e)
         {
+            ConfigurationSelectorForm csf = new ConfigurationSelectorForm(ConfigurationSelectorForm.ConfigSelectorMode.EditPrimary);
+            csf.ShowDialog();
+        }
+
+        private void addSecondaryConfigButton_Click(object sender, EventArgs e)
+        {
             ConfigurationSelectorForm csf = new ConfigurationSelectorForm(ConfigurationSelectorForm.ConfigSelectorMode.SelectPrimary);
             csf.ShowDialog();
+
+            SecondaryConfigForm scf = new SecondaryConfigForm(csf.MainConfigurationSelectedID);
+            scf.ShowDialog();  
         }
     }
 }

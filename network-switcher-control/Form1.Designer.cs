@@ -34,6 +34,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewMainConfigButton = new System.Windows.Forms.Button();
             this.editMainConfigurationButton = new System.Windows.Forms.Button();
+            this.addSecondaryConfigButton = new System.Windows.Forms.Button();
             this.networkContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -79,11 +80,22 @@
             this.editMainConfigurationButton.UseVisualStyleBackColor = true;
             this.editMainConfigurationButton.Click += new System.EventHandler(this.editMainConfigurationButton_Click);
             // 
+            // addSecondaryConfigButton
+            // 
+            this.addSecondaryConfigButton.Location = new System.Drawing.Point(12, 70);
+            this.addSecondaryConfigButton.Name = "addSecondaryConfigButton";
+            this.addSecondaryConfigButton.Size = new System.Drawing.Size(175, 23);
+            this.addSecondaryConfigButton.TabIndex = 3;
+            this.addSecondaryConfigButton.Text = "Add Secondary Config";
+            this.addSecondaryConfigButton.UseVisualStyleBackColor = true;
+            this.addSecondaryConfigButton.Click += new System.EventHandler(this.addSecondaryConfigButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(199, 262);
+            this.Controls.Add(this.addSecondaryConfigButton);
             this.Controls.Add(this.editMainConfigurationButton);
             this.Controls.Add(this.addNewMainConfigButton);
             this.Name = "MainForm";
@@ -103,6 +115,7 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.Button addNewMainConfigButton;
         private System.Windows.Forms.Button editMainConfigurationButton;
+        private System.Windows.Forms.Button addSecondaryConfigButton;
     }
 }
 
