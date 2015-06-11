@@ -84,6 +84,7 @@
             this.netmask4TextBox.TabIndex = 32;
             this.netmask4TextBox.Text = "000";
             this.netmask4TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.netmask4TextBox.Leave += new System.EventHandler(this.netmask4TextBox_Leave);
             // 
             // netmask3TextBox
             // 
@@ -93,6 +94,7 @@
             this.netmask3TextBox.TabIndex = 31;
             this.netmask3TextBox.Text = "000";
             this.netmask3TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.netmask3TextBox.Leave += new System.EventHandler(this.netmask3TextBox_Leave);
             // 
             // netmask2TextBox
             // 
@@ -102,6 +104,7 @@
             this.netmask2TextBox.TabIndex = 30;
             this.netmask2TextBox.Text = "000";
             this.netmask2TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.netmask2TextBox.Leave += new System.EventHandler(this.netmask2TextBox_Leave);
             // 
             // netmask1TextBox
             // 
@@ -111,6 +114,7 @@
             this.netmask1TextBox.TabIndex = 29;
             this.netmask1TextBox.Text = "000";
             this.netmask1TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.netmask1TextBox.Leave += new System.EventHandler(this.netmask1TextBox_Leave);
             // 
             // label9
             // 
@@ -156,6 +160,7 @@
             this.ipAddr4TextBox.TabIndex = 24;
             this.ipAddr4TextBox.Text = "000";
             this.ipAddr4TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ipAddr4TextBox.Leave += new System.EventHandler(this.ipAddr4TextBox_Leave);
             // 
             // ipAddr3TextBox
             // 
@@ -165,6 +170,7 @@
             this.ipAddr3TextBox.TabIndex = 23;
             this.ipAddr3TextBox.Text = "000";
             this.ipAddr3TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ipAddr3TextBox.Leave += new System.EventHandler(this.ipAddr3TextBox_Leave);
             // 
             // ipAddr2TextBox
             // 
@@ -174,6 +180,7 @@
             this.ipAddr2TextBox.TabIndex = 22;
             this.ipAddr2TextBox.Text = "000";
             this.ipAddr2TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ipAddr2TextBox.Leave += new System.EventHandler(this.ipAddr2TextBox_Leave);
             // 
             // ipAddr1TextBox
             // 
@@ -183,6 +190,7 @@
             this.ipAddr1TextBox.TabIndex = 21;
             this.ipAddr1TextBox.Text = "000";
             this.ipAddr1TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ipAddr1TextBox.Leave += new System.EventHandler(this.ipAddr1TextBox_Leave);
             // 
             // label2
             // 
@@ -197,6 +205,7 @@
             // 
             this.configurationNameTextBox.Location = new System.Drawing.Point(124, 12);
             this.configurationNameTextBox.Name = "configurationNameTextBox";
+            this.configurationNameTextBox.ReadOnly = true;
             this.configurationNameTextBox.Size = new System.Drawing.Size(198, 20);
             this.configurationNameTextBox.TabIndex = 19;
             // 
@@ -217,6 +226,7 @@
             this.saveButton.TabIndex = 43;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
             // SecondaryConfigForm
             // 

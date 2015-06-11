@@ -47,10 +47,6 @@ namespace network_switcher_control
 
             if (SecondaryID == 0)
             {
-                SQLiteTools slt = new SQLiteTools();
-
-                int newSecondaryID = slt.GetNextSecondaryNetworkID();
-
                 string sql = "SELECT * FROM MainNetworkConfig WHERE ID=@ID LIMIT 1";
                 using (SQLiteConnection sqlconn = new SQLiteConnection(Program.SQLiteConnectionString))
                 {
@@ -72,7 +68,12 @@ namespace network_switcher_control
             }
             else
             {
-                string sql = "SELECT * FROM SecondaryNetworkConfig WHERE ID=@ID LIMIT 1";
+                string sql = "SELECT MainNetworkConfig.ConnectionName, SecondaryNetworkConfig.*";
+                sql += " FROM MainNetworkConfig";
+                sql += " INNER JOIN SecondaryNetworkConfig";
+                sql += " ON MainNetworkConfig.ID = SecondaryNetworkConfig.MainNetworkConfigID";
+                sql += " WHERE SecondaryNetworkConfig.ID=@ID LIMIT 1";
+
                 using (SQLiteConnection sqlconn = new SQLiteConnection(Program.SQLiteConnectionString))
                 {
                     sqlconn.Open();
@@ -81,10 +82,12 @@ namespace network_switcher_control
                     {
                         sqlcmd.Parameters.Add(new SQLiteParameter("@ID", DbType.Int32));
                         sqlcmd.Parameters["@ID"].Value = SecondaryID;
-
+                        
                         using (SQLiteDataReader reader = sqlcmd.ExecuteReader())
                         {
                             reader.Read();
+
+                            configurationNameTextBox.Text = (string)reader["ConnectionName"];
 
                             string[] ipArr = ((string)reader["IpAddress"]).Split('.');
                             ipAddr1TextBox.Text = ipArr[0];
@@ -104,5 +107,119 @@ namespace network_switcher_control
         }
 
 
+        private void ValidateAddressPart(TextBox textBox)
+        {
+            int tmpint = Int32.Parse(textBox.Text);
+
+            if (tmpint < 0)
+            {
+                MessageBox.Show("Address cannot be less than 0.");
+                tmpint = 0;
+            }
+            else if (tmpint > 255)
+            {
+                MessageBox.Show("Address connot be greater than 255.");
+                tmpint = 255;
+            }
+
+            textBox.Text = tmpint.ToString();
+        }
+
+        private void ipAddr1TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void ipAddr2TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void ipAddr3TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void ipAddr4TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void netmask1TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void netmask2TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void netmask3TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void netmask4TextBox_Leave(object sender, EventArgs e)
+        {
+            ValidateAddressPart((TextBox)sender);
+        }
+
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            string ipstr = String.Format("{0}.{1}.{2}.{3}", ipAddr1TextBox.Text, ipAddr2TextBox.Text, ipAddr3TextBox.Text, ipAddr4TextBox.Text);
+            string netmaskstr = String.Format("{0}.{1}.{2}.{3}", netmask1TextBox.Text, netmask2TextBox.Text, netmask3TextBox.Text, netmask4TextBox.Text);
+
+            if (SecondaryID == 0) // means we have a new secondary setup
+            {
+                SQLiteTools slt = new SQLiteTools();
+
+                int newSecondaryID = slt.GetNextSecondaryNetworkID();
+
+                string sql = "INSERT INTO SecondaryNetworkConfig (ID, MainNetworkConfigID, IpAddress, NetMask) VALUES (@SecondaryID, @MainNetworkConfigID, @IP, @Netmask)";
+                using (SQLiteConnection sqlconn = new SQLiteConnection(Program.SQLiteConnectionString))
+                {
+                    sqlconn.Open();
+
+                    using (SQLiteCommand sqlcmd = new SQLiteCommand(sql, sqlconn))
+                    {
+                        sqlcmd.Parameters.Add(new SQLiteParameter("@SecondaryID", DbType.Int32));
+                        sqlcmd.Parameters.Add(new SQLiteParameter("@MainNetworkConfigID", DbType.Int32));
+                        sqlcmd.Parameters.Add(new SQLiteParameter("@IP", DbType.String));
+                        sqlcmd.Parameters.Add(new SQLiteParameter("@Netmask", DbType.String));
+
+                        sqlcmd.Parameters["@SecondaryID"].Value = newSecondaryID;
+                        sqlcmd.Parameters["@MainNetworkConfigID"].Value = MainID;
+                        sqlcmd.Parameters["@IP"].Value = ipstr;
+                        sqlcmd.Parameters["@Netmask"].Value = netmaskstr;
+
+                        sqlcmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            else //update a secondary setup
+            {
+                string sql = "UPDATE SecondaryNetworkConfig SET IpAddress=@IP, NetMask=@Netmask WHERE ID=@SecondaryID AND MainNetworkConfigID=@MainNetworkConfigID";
+                using (SQLiteConnection sqlconn = new SQLiteConnection(Program.SQLiteConnectionString))
+                {
+                    sqlconn.Open();
+
+                    using (SQLiteCommand sqlcmd = new SQLiteCommand(sql, sqlconn))
+                    {
+                        sqlcmd.Parameters.Add(new SQLiteParameter("@SecondaryID", DbType.Int32));
+                        sqlcmd.Parameters.Add(new SQLiteParameter("@MainNetworkConfigID", DbType.Int32));
+                        sqlcmd.Parameters.Add(new SQLiteParameter("@IP", DbType.String));
+                        sqlcmd.Parameters.Add(new SQLiteParameter("@Netmask", DbType.String));
+
+                        sqlcmd.Parameters["@SecondaryID"].Value = SecondaryID;
+                        sqlcmd.Parameters["@MainNetworkConfigID"].Value = MainID;
+                        sqlcmd.Parameters["@IP"].Value = ipstr;
+                        sqlcmd.Parameters["@Netmask"].Value = netmaskstr;
+
+                        sqlcmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
     }
 }

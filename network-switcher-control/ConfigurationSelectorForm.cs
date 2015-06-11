@@ -15,6 +15,7 @@ namespace network_switcher_control
     {
         private ConfigSelectorMode SelectorMode { get; set; }
         public int MainConfigurationSelectedID { get; private set; }
+        public int SecondaryConfigurationSelectedID { get; private set; }
 
         public ConfigurationSelectorForm(ConfigSelectorMode csm)
         {
@@ -22,9 +23,17 @@ namespace network_switcher_control
 
             SelectorMode = csm;
             MainConfigurationSelectedID = -1;
+            SecondaryConfigurationSelectedID = -1;
         }
 
+        public ConfigurationSelectorForm(ConfigSelectorMode csm, int mainID)
+        {
+            InitializeComponent();
 
+            SelectorMode = csm;
+            MainConfigurationSelectedID = mainID;
+            SecondaryConfigurationSelectedID = -1;
+        }
 
         public enum ConfigSelectorMode
         {            
@@ -44,19 +53,29 @@ namespace network_switcher_control
             {
                 sql = "SELECT * FROM MainNetworkConfig";
             }
-            else if (SelectorMode == ConfigSelectorMode.SelectSecondary ||
-                SelectorMode == ConfigSelectorMode.EditSecondary)
+            else if (SelectorMode == ConfigSelectorMode.SelectSecondary)   
             {
                 sql = "SELECT * FROM SecondaryNetworkConfig";
             }
+            else if (SelectorMode == ConfigSelectorMode.EditSecondary)
+            {
+                sql = "SELECT * FROM SecondaryNetworkConfig WHERE MainNetworkConfigID=@MainNetworkConfigID";
+            }
 
             using (SQLiteConnection sqlconn = new SQLiteConnection(Program.SQLiteConnectionString))
-            using (SQLiteCommand sqlCmd = new SQLiteCommand(sql, sqlconn))
+            using (SQLiteCommand sqlcmd = new SQLiteCommand(sql, sqlconn))
             {
                 sqlconn.Open();
+
+                if (SelectorMode == ConfigSelectorMode.EditSecondary)
+                {
+                    sqlcmd.Parameters.Add(new SQLiteParameter("@MainNetworkConfigID", DbType.Int32));
+                    sqlcmd.Parameters["@MainNetworkConfigID"].Value = MainConfigurationSelectedID;
+                }
+
                 try
                 {
-                    using (SQLiteDataReader reader = sqlCmd.ExecuteReader())
+                    using (SQLiteDataReader reader = sqlcmd.ExecuteReader())
                     {                        
                         //Get names to make columns...
                         for (int i = 0; i < reader.FieldCount; i++)
@@ -98,18 +117,36 @@ namespace network_switcher_control
         private void configurationDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             DataGridView dgv = (DataGridView)sender;
-            int configurationIDSelected = (int)dgv[0, e.RowIndex].Value;
+            int configurationIDSelected = -1;
+            int secondaryConfigurationIDSelected = -1;
 
             if (this.SelectorMode == ConfigSelectorMode.EditPrimary)
             {
+                configurationIDSelected = (int)dgv[0, e.RowIndex].Value;
                 ConfigurationForm cf = new ConfigurationForm(false, configurationIDSelected);
                 cf.ShowDialog();
             }
             else if (this.SelectorMode == ConfigSelectorMode.SelectPrimary)
             {
-                MainConfigurationSelectedID = configurationIDSelected;
+                MainConfigurationSelectedID = (int)dgv[0, e.RowIndex].Value;
                 this.Close();
             }
+            else if (this.SelectorMode == ConfigSelectorMode.EditSecondary)
+            {
+                SecondaryConfigurationSelectedID = (int)dgv[0, e.RowIndex].Value;
+                MainConfigurationSelectedID = (int)dgv[1, e.RowIndex].Value;
+
+                SecondaryConfigForm scf = new SecondaryConfigForm(this.MainConfigurationSelectedID, this.SecondaryConfigurationSelectedID);
+                scf.ShowDialog();
+            }
+            else if (this.SelectorMode == ConfigSelectorMode.SelectSecondary)
+            {
+                SecondaryConfigurationSelectedID = (int)dgv[0, e.RowIndex].Value;
+                MainConfigurationSelectedID = (int)dgv[1, e.RowIndex].Value;
+
+                this.Close();
+            }
+
         }
     }
 }
