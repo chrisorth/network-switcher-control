@@ -48,7 +48,7 @@ namespace network_switcher_control
         private void networkNotifyIcon_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
-            {
+            {                          
                 networkContextMenu.Show();
             }
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Data;
 
 using System.Data.SQLite;
 
@@ -10,7 +11,7 @@ namespace network_switcher_control
 {
     class SQLiteSetup
     {
-        public static readonly int CurrentDatabaseVersion = 1;
+        public static readonly int CurrentDatabaseVersion = 2;
 
         public static void RunDBSetup(string sqlFileName)
         {
@@ -31,7 +32,7 @@ namespace network_switcher_control
 
                 if (File.Exists(sqlFileName))
                 {
-                    if (usersDBVersion < CurrentDatabaseVersion)
+                    if (usersDBVersion < 1)
                     {
                         //setup the database after a fresh install
                         sql = "CREATE TABLE DatabaseVersion (Version INT)";
@@ -50,10 +51,23 @@ namespace network_switcher_control
                         sqliteCommand.CommandText = sql;
                         sqliteCommand.ExecuteNonQuery();
 
-                        usersDBVersion++;
+                        usersDBVersion = 1;
                     }
 
                     // if any changes query the databaseversion and do the updates inserts or creates.
+                    if (usersDBVersion < 2)
+                    {
+                        // add a sort by column number in the MainNetworkConfig then update the DatabaseVersion
+                        sql = "ALTER TABLE MainNetworkConfig ADD COLUMN MenuPosition INT";
+                        sqliteCommand.CommandText = sql;
+                        sqliteCommand.ExecuteNonQuery();
+
+                        sql = "UPDATE DatabaseVersion SET Version=2 WHERE Version=1";
+                        sqliteCommand.CommandText = sql;
+                        sqliteCommand.ExecuteNonQuery();
+
+                        usersDBVersion = 2;
+                    }
                 }
             }
         }
